@@ -1,0 +1,80 @@
+		{% set timesselected_row = 0 %}
+		{% if (timeslots is not empty) %} 
+ 		<h3><b>{{ text_timeslot }}</b></h3>
+		<p>{{text_extra}}</p>
+
+		{% for timeslot in timeslots %}
+		<div class="form-group">
+			<div class="row">
+				<label class="col-sm-3 col-lg-3 col-md-3 col-xs-12 control-label" for="input-status">
+				{% for timsloname in timeslot['times'] %}
+				<h4><b>{{ timsloname.timeslot_time }}</b></h4>
+				<input type="hidden" name="option[timeslots][{{timesselected_row}}][day]" value="{{ timsloname['timeslot_time'] }}">
+				{% endfor %}</label>
+				
+			<div class="col-sm-12 col-lg-12 col-md-12 col-xs-12">
+				<div class="col-sm-6 col-lg-6 col-md-6 col-xs-12 padd0">
+						<select name="option[timeslots][{{timesselected_row}}][stat]" class="form-control actiondropdown" id="input-timeslotoption-{{ timesselected_row }}" rel="{{timesselected_row}}">
+							<option value="">{{ text_from }}</option>
+							{% set i=timeslot.time_start  %}{% for i in i..timeslot.time_end  %} 
+							<option value="{{  i }}">{{  i }} :00</option>
+							{% endfor %} 
+						</select>
+						<div id="error-timeslotoption-{{ timesselected_row }}" class="invalid-feedback"></div>
+
+					</div>
+				
+				<div class="col-sm-6 col-lg-6 col-md-6 col-xs-12 padd0">
+					<select name="option[timeslots][{{timesselected_row}}][end]" class="form-control to{{timesselected_row}}" id="input-timeslotoption1-{{timesselected_row}}">
+						 <option value="">{{ text_to }}</option>
+							{% set i=timeslot.time_start  %}{% for i in i..timeslot.time_end  %} 
+							  <option value="{{  i }}">{{  i }} :00</option>
+							{% endfor %} 
+						</select>
+							<div id="error-timeslotoption1-{{ timesselected_row }}" class="invalid-feedback"></div>
+					</div>
+					
+				</div>
+		   </div>
+		</div>
+			</br>
+			{% set timesselected_row = timesselected_row + 1 %}
+		{% endfor %}
+		{% endif %}
+		</div>
+<style>
+.padd0{
+	padding:0px;
+}
+.padd0 + .padd0{
+	padding-left:5px;
+}
+.paddleft{
+	padding-left:0px;
+}
+.tmd-timeslot .form-group{
+	margin-bottom:10px;
+}
+.site-wrapper .tmd-timeslot select.form-control{
+	min-width:160px;
+}
+.site-wrapper .tmd-timeslot .form-group>div{
+	display:block;
+}
+</style>
+<script>
+$('.actiondropdown').change(function(){
+		rel=$(this).attr('rel');
+		val=0;
+		for (i = val; i < 24; i++) {
+		
+	  $('.to'+rel+' option[value="'+i+'"').removeAttr('disabled');
+	}
+	val=$(this).val();
+
+	var i;
+	for (i = val; i > 0; i--) {
+	  $('.to'+rel+' option[value="'+i+'"').attr('disabled','disabled');
+	}
+})
+</script>

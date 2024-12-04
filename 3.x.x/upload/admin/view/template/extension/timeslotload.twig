@@ -1,0 +1,35 @@
+					<td>
+				
+					<select name="tmdtimeslot[{{timesselected_row}}][tmdday]" id="input-tmdday" class="form-control form-control timeslotvalue tmddaydata" rel="{{timesselected_row}}">
+					<option value="0">{{ text_select }}</option>
+					{% for ordertime in tmdtimeslotes %}
+					<option value="{{ ordertime.timeslote }}">{{ ordertime.timeslote }}</option>
+					{% endfor %}
+					</select>																
+					</div>
+					</td>
+					<td>
+					<label class="col-sm-2 control-label" for="input-tmdstart">{{ entry_start }}</label>
+					<div class="col-md-10">
+					<select name="tmdtimeslot[{{timesselected_row}}][tmdstart]" id="input-tmdstart" class="form-control">
+					{% for timeslot in timeslotloop %}
+						<option value="{{ timeslot.timeslotloop }}">{{ timeslot.timeslotloop }}</option>
+					{% endfor %}
+
+
+
+					</select>
+					</div>
+					</td>
+					<td>
+					<label class="col-sm-2 control-label" for="input-tmdstart">{{ entry_to }}</label>
+					<div class="col-md-10">
+					<select name="tmdtimeslot[{{timesselected_row}}][endtmd]" id="input-endtmd" class="form-control">
+						{% for timeslot in timeslotloop %}
+						<option value="{{ timeslot.timeslotloop }}">{{ timeslot.timeslotloop }}</option>
+					{% endfor %}
+					</select>
+					</div>
+					</td>
+
+				

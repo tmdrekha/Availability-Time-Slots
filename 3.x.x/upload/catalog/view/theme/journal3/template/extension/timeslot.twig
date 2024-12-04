@@ -1,0 +1,84 @@
+<!-- TMD Time slot code start here -->
+{% set timesselected_row = 0 %}
+{% if (timeslots is not empty) %} 
+<h3>{{ text_timeslot }}</h3>
+<p>{{text_extra}}</p>
+<div class="tmd-timeslot product-options">
+{% for timeslot in timeslots %}
+
+<div class="row">
+	<div class="col-sm-12">
+		{% for timsloname in timeslot['times'] %}<b>{{ timsloname.timeslot_time }}</b><input type="hidden" name="option[timeslots][{{timesselected_row}}][day]" value="{{ timsloname['timeslot_time'] }}">{% endfor %}
+		
+		<div class="row">
+			<div class="col-sm-6">
+				<select name="option[timeslots][{{timesselected_row}}][stat]" class="form-control actiondropdown" id="input-timeslotoption-{{ timesselected_row }}" rel="{{timesselected_row}}"  class="form-control">
+				<option value="">{{ text_from }}</option>
+					{% set i=timeslot.time_start  %}{% for i in i..timeslot.time_end  %} 
+					<option value="{{  i }}">
+						{% if (i<12 or i==12) %}
+						{{  i }}:00 
+						{% else %}
+						{% set z=i-12 %}
+						{{   z }}:00 
+						{% endif %}
+					</option>
+					{% endfor %} 
+				</select>
+				<div id="error-timeslotoption-{{ timesselected_row }}" class="invalid-feedback"></div>
+			</div>
+			<div class="col-sm-6">
+				<select name="option[timeslots][{{timesselected_row}}][end]" class="form-control to{{timesselected_row}}" id="input-timeslotoption1-{{timesselected_row}}">
+					<option value="">{{ text_to }}</option>
+					{% set i=timeslot.time_start  %}{% for i in i..timeslot.time_end  %} 
+					<option value="{{  i }}">{% if (i<12 or i==12) %}
+					{{  i }}:00
+					{% else %}
+					{% set z=i-12 %}
+					{{   z }}:00
+					{% endif %}</option>
+					{% endfor %}  
+				</select>
+				<div id="error-timeslotoption1-{{ timesselected_row }}" class="invalid-feedback"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% set timesselected_row = timesselected_row + 1 %}
+{% endfor %}
+</div>
+{% endif %}
+<style type="text/css">
+.tmd-timeslot .row {
+	margin: 0 -6px;
+}
+.tmd-timeslot .row >div{
+	padding: 0 6px;
+}
+.tmd-timeslot .form-group{
+	margin-bottom:10px;
+}
+.site-wrapper .tmd-timeslot select.form-control{
+	min-width:160px;
+}
+.site-wrapper .tmd-timeslot .form-group>div{
+	display:block;
+}
+</style>
+<script type="text/javascript">
+$('.actiondropdown').change(function(){
+rel= $(this).attr('rel');
+val= 0;
+for (i = val; i < 24; i++) {
+   $('.to'+rel+' option[value="'+i+'"').removeAttr('disabled');
+ }
+val = $(this).val();
+
+var i;
+for (i = val; i > 0; i--) {
+  $('.to'+rel+' option[value="'+i+'"').attr('disabled','disabled');
+}
+})
+</script>
+<!-- TMD Time slot code end here -->

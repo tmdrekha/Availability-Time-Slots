@@ -1,0 +1,1399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>TMD Time slot</name>
+  <code>TT1.0</code>
+  <version>1.0</version>
+  <author>TMD</author>
+  <link>http://opencartextensions.in/</link>
+ 
+ <file path="catalog/controller/product/product.php">
+	<operation>
+      <search><![CDATA[$data['column_left'] = $this->load->controller('common/column_left');]]></search>
+      <add position="after">
+        <![CDATA[
+			/// time slot start
+
+			if (isset($this->request->get['path'])) {
+				$data['path_id'] = (int)$this->request->get['path'];
+			} else {
+				$data['path_id'] = 0;
+			}
+
+			$this->load->language('extension/timeslot');
+			if(!empty($this->request->get['product_id'])){
+			$co_product_id = $this->request->get['product_id'];
+			}else{
+			$co_product_id = '';
+			}
+
+			$this->load->model('extension/timeslot');
+			$config_modulstatus    = $this->config->get('module_timeslot_status');
+			$statusvalue           = $this->model_extension_timeslot->getProducttimeslotstatus($co_product_id);
+			$config_status         = $this->config->get('tmd_timeslot_status');
+			if($config_modulstatus){
+			  if(!empty($statusvalue)){
+			     $data['timeslotdata'] = $this->load->controller('extension/timeslot');
+			  }elseif($config_status){
+			     $data['timeslotdata'] = $this->load->controller('extension/timeslot');
+			  }else{
+			     $data['timeslotdata']='';
+		  }			 
+		}
+		/// time slot end 
+		]]>
+      </add>
+    </operation>
+  </file>
+  
+  <file path="catalog/view/theme/journal3/template/product/product.twig">
+		<operation>
+		  <search ><![CDATA[{% if journal3.get('catalogCartStatus') or journal3.get('catalogWishlistStatus') or journal3.get('catalogCompareStatus') or (journal3_product_extra_buttons and not journal3.is_popup) %}]]></search>
+		  <add position="before">
+		 	<![CDATA[
+		       <br />
+			  {{ timeslotdata }}		
+			]]>
+		  </add>
+		</operation>
+
+		<operation>
+		  <search ><![CDATA[<input id="product-id" type="hidden" name="product_id" value="{{ product_id }}" />]]></search>
+		  <add position="before">
+		 	<![CDATA[<input type="hidden" name="path_id" value="{{ path_id }}" />]]>
+		  </add>
+		</operation>
+
+		<operation>
+		  <search><![CDATA[if ($('html').hasClass('popup-options')) {]]></search>
+		  <add position="before" offset="1">
+			<![CDATA[
+			// xml
+      if (json['error1']) {
+        for (var key in json['error1']) {
+          var element = $('#input-timeslotoption-' + key.replace('_', '-'));
+          
+          // Check if the element is part of an input group
+          if (element.parent().hasClass('input-group')) {
+              // If part of input group, append the error1 after the parent
+              element.parent().after('<div class="text-danger">' + json['error1'][key] + '</div>');
+          } else {
+              // Otherwise, append the error1 after the element itself
+              element.after('<div class="text-danger">' + json['error1'][key] + '</div>');
+          }
+        }
+      }
+
+      if (json['error2']) {
+        for (var key in json['error2']) {
+          var element = $('#input-timeslotoption1-' + key.replace('_', '-'));
+          
+          // Check if the element is part of an input group
+          if (element.parent().hasClass('input-group')) {
+              // If part of input group, append the error2 after the parent
+              element.parent().after('<div class="text-danger">' + json['error2'][key] + '</div>');
+          } else {
+              // Otherwise, append the error2 after the element itself
+              element.after('<div class="text-danger">' + json['error2'][key] + '</div>');
+          }
+        }
+      }
+
+// xml
+			]]>
+		  </add>
+		</operation>
+
+	</file>
+	
+	<file path="catalog/view/theme/*/template/product/product.twig">
+		<operation>
+		  <search ><![CDATA[<button type="button" id="button-cart" data-loading-text="{{ text_loading }}" class="btn btn-primary btn-lg btn-block">{{ button_cart }}</button>]]></search>
+		  <add position="before">
+		 	<![CDATA[
+		       <br />
+			  {{ timeslotdata }}		
+			]]>
+		  </add>
+		</operation>
+
+		<operation>
+		  <search ><![CDATA[<input type="hidden" name="product_id" value="{{ product_id }}" />]]></search>
+		  <add position="before">
+		 	<![CDATA[<input type="hidden" name="path_id" value="{{ path_id }}" />]]>
+		  </add>
+		</operation>
+
+		<operation>
+		  <search><![CDATA[if (json['error']['option']) {]]></search>
+		  <add position="before" offset="2">
+			<![CDATA[
+			// xml
+      if (json['error1']) {
+        for (var key in json['error1']) {
+          var element = $('#input-timeslotoption-' + key.replace('_', '-'));
+          
+          // Check if the element is part of an input group
+          if (element.parent().hasClass('input-group')) {
+              // If part of input group, append the error1 after the parent
+              element.parent().after('<div class="text-danger">' + json['error1'][key] + '</div>');
+          } else {
+              // Otherwise, append the error1 after the element itself
+              element.after('<div class="text-danger">' + json['error1'][key] + '</div>');
+          }
+        }
+      }
+
+      if (json['error2']) {
+        for (var key in json['error2']) {
+          var element = $('#input-timeslotoption1-' + key.replace('_', '-'));
+          
+          // Check if the element is part of an input group
+          if (element.parent().hasClass('input-group')) {
+              // If part of input group, append the error2 after the parent
+              element.parent().after('<div class="text-danger">' + json['error2'][key] + '</div>');
+          } else {
+              // Otherwise, append the error2 after the element itself
+              element.after('<div class="text-danger">' + json['error2'][key] + '</div>');
+          }
+        }
+      }
+
+// xml
+			]]>
+		  </add>
+		</operation>
+	</file>
+
+	<file path="catalog/controller/common/cart.php">
+		<operation>
+		  <search ><![CDATA['value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)]]></search>
+		  <add position="replace">
+		 	<![CDATA['value' => (utf8_strlen($value) > 500 ? utf8_substr($value, 0, 500) . '..' : $value)]]>
+		  </add>
+		</operation>
+	</file>
+
+	 <file path="catalog/controller/checkout/cart.php">
+		<operation>
+		  <search ><![CDATA['value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)]]></search>
+		  <add position="replace">
+		 	<![CDATA['value' => (utf8_strlen($value) > 500 ? utf8_substr($value, 0, 500) . '..' : $value)]]>
+		  </add>
+		</operation>
+
+		<operation>
+		  <search ><![CDATA[if (isset($this->request->post['recurring_id'])) {]]></search>
+		  <add position="before">
+		 	<![CDATA[
+
+			 	// new code
+				$this->load->language('extension/timeslot');
+
+				// Get the configuration status for showing error messages
+				$errormsgshow_status = $this->config->get('tmd_timeslot_errormsgshow_status');
+				if (!empty($errormsgshow_status)) {
+
+				    $option_timeslots = [];
+
+				    // Load the timeslot model
+				    $this->load->model('extension/timeslot');
+
+				    // Get the product timeslot status
+				    $product_timeslotoptions = $this->model_extension_timeslot->getProducttimeslotstatus($this->request->post['product_id']);
+
+				    // If the product has timeslot options
+				    if (!empty($product_timeslotoptions)) {
+				        // Check if timeslots are posted in the options
+				        if (isset($this->request->post['option']['timeslots'])) {
+				            $option_timeslots = array_filter($this->request->post['option']['timeslots']);
+				        } else {
+				            $option_timeslots = [0]; // Default to [0] if no timeslots are posted
+				        }
+
+				    } else {
+				       // Check if the product has a timeslot error configuration
+							$timesloterror = $this->config->get('tmd_timeslot_product_timer');
+
+							// Ensure $timesloterror is an array before using in_array
+							if (!is_array($timesloterror)) {
+							    $timesloterror = [];
+							}
+
+							if (in_array($this->request->post['product_id'], $timesloterror)) {
+							    // Check for posted timeslots in the product options
+							    if (isset($this->request->post['option']['timeslots'])) {
+							        $option_timeslots = array_filter($this->request->post['option']['timeslots']);
+							    } else {
+							        $option_timeslots = [0];
+							    }
+							}
+
+							// Check if the category has a timeslot error configuration
+							$categoryerror = $this->config->get('tmd_timeslot_category_timer');
+
+							// Ensure $categoryerror is an array before using in_array
+							if (!is_array($categoryerror)) {
+							    $categoryerror = [];
+							}
+
+							if (isset($this->request->post['path_id']) && in_array($this->request->post['path_id'], $categoryerror)) {
+							    // Check for posted timeslots in the category options
+							    if (isset($this->request->post['option']['timeslots'])) {
+							        $option_timeslots = array_filter($this->request->post['option']['timeslots']);
+							    } else {
+							        $option_timeslots = [0];
+							    }
+							}
+
+					  }
+
+				    // Error handling for missing timeslots
+				    if (!empty($option_timeslots)) {
+				        foreach ($option_timeslots as $key => $timeslots) {
+				            // Check if 'stat' (start time) is missing
+				            if (empty($option['timeslots'][$key]['stat'])) {
+				                $json['error1'][$key] = $this->language->get('error_required1');
+				            }
+
+				            // Check if 'end' (end time) is missing
+				            if (empty($option['timeslots'][$key]['end'])) {
+				                $json['error2'][$key] = $this->language->get('error_required1');
+				            }
+				        }
+				    }
+				}
+				// new code
+
+		 	]]>
+		  </add>
+		</operation>
+	</file>
+
+
+	  <file path="catalog/controller/account/order.php">
+		
+		<operation>
+		  <search ><![CDATA['value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)]]></search>
+		  <add position="replace">
+		 	<![CDATA['value' => (utf8_strlen($value) > 500 ? utf8_substr($value, 0, 500) . '..' : $value)]]>
+		  </add>
+		</operation>
+
+		<operation>
+		  <search ><![CDATA[$data['shipping_method'] = $order_info['shipping_method'];]]></search>
+		  <add position="before">
+		 	<![CDATA[
+   			    $data['config_modulstatus'] = $this->config->get('module_timeslot_status');
+			      $this->load->model('extension/timeslot');
+
+				$data['productInfos'] = array();
+
+				$tmd_timeslot_slot_no = $this->config->get('tmd_timeslot_slot_to');
+				$language_id = $this->config->get('config_language_id');
+				$slot_to     = $tmd_timeslot_slot_no[$language_id]['to'];
+				
+				$timesloprodcutInfos = $this->model_extension_timeslot->getOrdertimeslotProductdata($this->request->get['order_id']);
+				foreach($timesloprodcutInfos as $timesloprodcutInfo){
+					 $resultsProductTimeslots = $this->model_extension_timeslot->getOrdertimeslotCustomer($timesloprodcutInfo['product_id'],$this->request->get['order_id']);
+
+					$timeslotdata=array();
+
+					foreach($resultsProductTimeslots as $timeslots){
+					   $timeslotdata[]=array(
+						  'tmdday' =>$timeslots['tmdday'].' '.$timeslots['tmdstart'].' '.$slot_to.' ' .$timeslots['endtmd']
+					   );
+				   }
+
+					$timeslotProductResults = $this->model_extension_timeslot->getProducttimeslot($timesloprodcutInfo['product_id']);
+					 if(!empty($timeslotProductResults)){
+						 $name        = $timeslotProductResults['name'];
+						 $product_id  = $timeslotProductResults['product_id'];
+					 }
+
+					$data['productInfos'][]= array(
+						  'timeslotdata' => $timeslotdata,
+						  'name'         => $name
+					);
+				}    
+	
+			]]>
+		   </add>
+		   </operation> 
+	 </file>
+	 
+	  <file path="catalog/view/theme/*/template/account/order_info.twig">
+		<operation>
+		  <search ><![CDATA[<div class="buttons clearfix">]]></search>
+		  <add position="before">
+		 	<![CDATA[
+				<div class="tab-pane">
+			{% if (config_modulstatus) %}
+			   <h3>{{ entry_timeslot }}</h3>
+			  <div class="table-responsive">
+			  <table class="table table-bordered">
+				<thead>
+				  <tr>
+					<td>{{ entry_producttime }}</td>
+					<td>{{ entry_timeslot }}</td>
+				  </tr>
+				</thead>
+				<tbody>
+				{% for timeslotproduct in productInfos %}
+				<tr>
+				  <td>{{ timeslotproduct.name }}</td>
+					<td>
+						<table class="table table-bordered">
+							{% set i=1 %}
+							{% for timeslot in timeslotproduct.timeslotdata %}
+							<tr {% if i==1 %}style="background:green;color:#FFF" {% endif %}>
+								<td>{{ timeslot.tmdday }}</td>
+							</tr>
+							{% set i=i+1 %}
+							{% endfor %}
+						</table>
+					</td>
+					  <tr>
+				{% endfor %}
+				  </tbody>
+			  </table>
+			</div>		   
+			</div>
+			{% endif %}
+			]]>
+		   </add>
+		 </operation>
+	 </file>
+ 
+	 <file path="catalog/controller/checkout/confirm.php">
+	 	<operation>
+		  <search ><![CDATA['value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)]]></search>
+		  <add position="replace">
+		 	<![CDATA['value' => (utf8_strlen($value) > 500 ? utf8_substr($value, 0, 500) . '..' : $value)]]>
+		  </add>
+		</operation>
+
+		<operation>
+		  <search ><![CDATA[foreach ($product['option'] as $option) {]]></search>
+		  <add position="after">
+		 	<![CDATA[
+					/// time time slot start 
+				if($option['type'] =='timeslot'){
+					if(!empty($option['tmdday'])){
+						$tmdday=$option['tmdday'];
+					}
+
+					if(!empty($option['tmdend'])){
+						$tmdend=$option['tmdend'];
+					}
+
+					if(!empty($option['tmdstat'])){
+						$tmdstat=$option['tmdstat'];
+					}
+
+				}else{
+						$tmdday  = '';
+						$tmdend  = '';
+						$tmdstat = '';
+					}
+			/// time time slot end  
+			]]>
+		  </add>
+		</operation>
+		<operation>
+		  <search><![CDATA['product_option_id'       => $option['product_option_id'],]]></search>
+		  <add position="before">
+			<![CDATA[
+			/// time time slot start 
+			'tmdstat'  => $tmdstat,
+			'tmdend'   => $tmdend,
+			'tmdday'   => $tmdday,
+			/// time time slot end 
+			]]>
+		  </add>
+		</operation>
+	</file>
+	 
+	 <file path="catalog/model/checkout/order.php">
+		<operation>
+		  <search ><![CDATA[foreach ($product['option'] as $option) {]]></search>
+		  <add position="after">
+		 	<![CDATA[
+			  /// time time slot start 
+					if($option['type'] =='timeslot'){
+					if(!empty($option['tmdday'])){
+						$tmdday=$option['tmdday'];
+					}
+					if(!empty($option['tmdend'])){
+						$tmdend=$option['tmdend'];
+					}
+					if(!empty($option['tmdstat'])){
+						$tmdstat=$option['tmdstat'];
+					}
+					$this->db->query("INSERT INTO " . DB_PREFIX . "timeslot_ordertimeslot SET order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "',tmdstart = '" . (int)$tmdstat. "',endtmd = '" . (int)$tmdend . "', tmdday= '" .  $this->db->escape($tmdday). "',date_added = NOW()");
+					}else{
+						$tmdday='';
+						$tmdend='';
+						$tmdstat='';
+					}
+					/// time time slot end 
+					]]>
+		  </add>
+		</operation>
+		<operation>
+		  <search><![CDATA[$this->addOrderHistory($order_id, 0);]]></search>
+		  <add position="before">
+			<![CDATA[
+				/// time time slot start 
+				 $this->db->query("DELETE FROM " . DB_PREFIX . "timeslot_ordertimeslot WHERE order_id = '" . (int)$order_id . "'");
+				/// time time slot end 
+			]]>
+		  </add>
+		</operation>
+	</file>
+    
+     <file path="system/library/cart/cart.php">	
+		<operation>
+		  <search ><![CDATA[foreach (json_decode($cart['option']) as $product_option_id => $value) { ]]></search>
+		   <add position="replace">
+			<![CDATA[ 
+              foreach (json_decode($cart['option'],true) as $product_option_id => $value) { 
+			  	//// time slot start
+
+			  	$tmd_timeslot_availability = $this->config->get('tmd_timeslot_availability');
+		
+				$textavailability  = $tmd_timeslot_availability[$this->config->get('config_language_id')]['availability'];
+				
+			  	if(!empty($textavailability)){
+					$text_availability=$tmd_timeslot_availability[$this->config->get('config_language_id')]['availability'];
+				}else{
+					$text_availability='Availability';
+				}
+			    if(!empty($product_option_id == 'timeslots')){
+				foreach($value as $key => $times){
+					if(!empty($times['stat'] && $times['end'])){
+
+						$times['stat']=($times['stat']).':00 ';
+						$times['end']=($times['end']).':00 ';
+
+						$timeslot=$times['day'].' '.$times['stat'].' to '.$times['end'];
+						$option_data[] = array(
+						'product_option_id'        => $product_option_id,
+						'product_option_value_id'  => '',
+						'option_id'                => '',
+						'option_value_id'          => '',
+						'name'                     => '<b>'.$text_availability.'</b>',
+						'value'                    => '<b>'.$timeslot.'</b>',
+						'type'                     => 'timeslot',
+						'tmdday'                   => $times['day'],
+						'tmdstat'                  => $times['stat'],
+						'tmdend'                   => $times['end'],
+						'quantity'                 => '',
+						'subtract'                 => '',
+						'price'                    =>'',
+						'price_prefix'             =>'',
+						'points'                   => '',
+						'points_prefix'            => '',
+						'weight'                   =>'',
+						'weight_prefix'            => '',
+				  );
+			   
+				 }
+			   }
+		   } 
+			//// time slot start end 
+			  ]]>
+		  </add>
+		 </operation>
+	 </file>
+	 
+	   <file path="catalog/language/*/account/order.php">
+		<operation>
+		  <search ><![CDATA[$_['column_comment']        = 'Comment';]]></search>
+		  <add position="before">
+		 	<![CDATA[
+			  $_['entry_timeslot']     = 'Times Selected';
+			  $_['entry_producttime']  = 'Products';
+			]]>
+		   </add>
+		 </operation>
+	 </file>
+
+	<file path="admin/controller/catalog/product.php">
+		<operation>
+		  <search><![CDATA[$this->load->model('localisation/language');]]></search>
+		  <add position="after">
+			<![CDATA[
+				/* time slot start */
+				if(!empty($this->request->get['product_id'])){
+			      $co_product_id = $this->request->get['product_id'];
+			  }else{
+			      $co_product_id = '';
+			  }
+	
+				$this->load->model('catalog/product');
+				$data['config_modulstatus'] = $this->config->get('module_timeslot_status');
+				$product_statu = $this->model_catalog_product->getProducttimeslotstart($co_product_id);
+
+				if (isset($this->request->post['time_status'])) {
+				  $data['time_status'] = $this->request->post['time_status'];
+				} elseif (!empty($product_statu)) {
+				  $data['time_status']  = $product_statu['time_status'];
+				} else {
+				   $data['time_status'] = '';
+				}
+
+				if (isset($this->request->post['timeslot'])) {
+				$timesselecteds = $this->request->post['timeslot'];
+				} elseif (isset($this->request->get['product_id'])) {
+				$timesselecteds = $this->model_catalog_product->getTimeslotValue($co_product_id);
+				} else {
+				$timesselecteds = array();
+				}
+
+
+				$data['timeslotresults'] = array();
+				foreach ($timesselecteds as $value_results) {
+				$data['timeslotresults'][] = array(
+				'time_id'                  => $value_results['time_id'],
+				'timeslot_value_timedata'  => $value_results['timeslot_value_timedata'],
+				'time_start'               => $value_results['time_start'],
+				'time_end'                 => $value_results['time_end'],
+				'sort_order'               => $value_results['sort_order'],
+				);
+				}
+				/* time slot end  */
+			]]>
+		  </add>
+		</operation>
+	 </file>
+	 
+	 
+	 <file path="admin/view/template/catalog/product_form.twig">
+		<operation>
+		  <search ><![CDATA[<li><a href="#tab-design" data-toggle="tab">{{ tab_design }}</a></li>]]></search>
+		  <add position="after">
+		 	<![CDATA[
+				{% if config_modulstatus %} 
+				<li><a href="#tab-timesselected" data-toggle="tab"> {{ entry_timeslot }} </a></li>
+				{% endif %} 
+			]]>
+		   </add>
+		 </operation>
+		 <operation>
+		  <search ><![CDATA[<div class="tab-pane" id="tab-design">]]></search>
+		  <add position="before">
+		 	<![CDATA[
+				<div class="tab-pane" id="tab-timesselected">
+		         <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+                <div class="col-sm-10">
+					<select name="time_status" id="input-status" class="form-control">
+					{% if time_status %}
+					<option value="1" selected="selected">{{ text_enabled }}</option>
+					<option value="0">{{ text_disabled }}</option>
+					{% else %}
+					<option value="1">{{ text_enabled }}</option>
+					<option value="0" selected="selected">{{ text_disabled }}</option>
+					{% endif %}
+					</select>
+                </div>
+              </div>
+		  
+			 <div class="table-responsive">
+			<table id="timerslottable" class="table table-striped table-bordered table-hover">
+			<thead>
+			<tr>
+			  <td class="text-left">{{ entry_day }}</td>
+			  <td class="text-left">{{ entry_start }}</td>
+			  <td class="text-left">{{ entry_end }}</td>
+			  <td class="text-left"> {{ entry_sort_order }} </td>
+			  <td class="text-left"> {{ text_acion }} </td>
+			</tr>
+			</thead>
+			<tbody>
+			 {% set timesselected_row = 0 %}
+				{% for timesslot_info in timeslotresults %}
+				<tr id="timerslot-row{{ timesselected_row }}">
+				  <td class="text-left">
+					{% for language in languages %}
+					<div class="input-group"> <span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+					  <input type="text" name="timeslot[{{ timesselected_row }}][days][{{ language.language_id }}][timeslot_time]" value="{{ timesslot_info.timeslot_value_timedata[language.language_id] ? timesslot_info.timeslot_value_timedata[language.language_id].timeslot_time }}" placeholder="{{entry_day}}" class="form-control" />
+					</div>
+					{% endfor %}</td>
+
+					<td class="text-left"><div class="input-group"><input type="text" name="timeslot[{{ timesselected_row }}][time_start]" value="{{ timesslot_info.time_start }}" placeholder="{{ entry_start }}" data-date-format="HH:mm" id="input-value{{ timesselected_row }}" class="form-control hour-input" maxlength="2" /></div></td>
+
+					<td class="text-left"><div class="input-group"><input type="text" name="timeslot[{{ timesselected_row }}][time_end]" value="{{ timesslot_info.time_end }}" placeholder="{{ entry_end }}" data-date-format="HH:mm" id="input-start{{ timesselected_row }}" class="form-control hour-input" maxlength="2" /></div></td>
+
+		      <td class="text-left"><div class="input-group"><input type="text" name="timeslot[{{ timesselected_row }}][sort_order]" value="{{ timesslot_info.sort_order }}" placeholder="{{ entry_sort_order }}"  id="input-sort{{ timesselected_row }}" class="form-control" /></div></td>
+					
+					<td class="text-left"><button type="button" onclick="$(this).tooltip('destroy');$('#timerslot-row{{ timesselected_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
+
+				</tr>
+				{% set timesselected_row = timesselected_row + 1 %}
+				{% endfor %}
+			</tbody>
+			<tfoot>
+			<tr>
+			  <td colspan="4"></td>
+			  <td class="text-left"><button type="button" onclick="Addtmd_timeslot_category_timer();" data-toggle="tooltip" title="{{ button_time_add }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+			</tr>
+			</tfoot>
+			</table>
+			</div>
+
+		   </div>
+			]]>
+		   </add>
+		 </operation>
+		 <operation>
+		  <search ><![CDATA[$('input[name=\'manufacturer\']').autocomplete({]]></search>
+		  <add position="before">
+		 	<![CDATA[
+				var timesselected_row = {{ timesselected_row }};
+				function Addtmd_timeslot_category_timer() {
+				html = '<tr id="timerslot-row' + timesselected_row + '">';
+				html += '  <td class="text-left">';
+				{% for language in languages %}
+				html += '<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span><input name="timeslot[' + timesselected_row + '][days][{{ language.language_id }}][timeslot_time]" rows="5" placeholder="{{entry_day}}" class="form-control"></div>';
+				{% endfor %}
+				html += '  </td>';		
+				html += '<td class="text-left"><div class="input-group"><input type="text" name="timeslot[' + timesselected_row + '][time_start]" value="" placeholder="{{ entry_start }}" data-date-format="HH:mm" id="input-value' + timesselected_row + '" class="form-control hour-input" maxlength="2" /></div></td>';
+				html += '<td class="text-left"><div class="input-group"><input type="text" name="timeslot[' + timesselected_row + '][time_end]" value="" placeholder="{{ entry_end }}" data-date-format="HH:mm" id="input-start' + timesselected_row + '" class="form-control hour-input" maxlength="2" /></div></td>';
+				html += '<td class="text-left"><div class="input-group"><input type="text" name="timeslot[' + timesselected_row + '][sort_order]" value="" placeholder="{{ entry_sort_order }}"  id="input-sort' + timesselected_row + '" class="form-control" /></div></td>';
+				html += '<td class="text-left"><button type="button" onclick="$(\'#timerslot-row' + timesselected_row + '\').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
+				html += '</tr>';
+				$('#timerslottable tbody').append(html);
+				timesselected_row++;
+				}
+			]]>
+		   </add>
+		 </operation>
+
+		 <operation>
+		  <search><![CDATA[{{ header }}]]></search>
+		  <add position="before">
+			<![CDATA[<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>]]>
+		  </add>
+		</operation>
+
+		<operation>
+		  <search><![CDATA[{{ footer }}]]></search>
+		  <add position="before">
+			<![CDATA[<script>
+			$(document).on('keyup', '.hour-input', function() {
+			    let value = $(this).val();
+			    // Allow only numeric values
+			    value = value.replace(/[^0-9]/g, '');
+
+			    // Restrict the value to a maximum of 24
+			    if (parseInt(value, 10) > 24) {
+			        value = '24';
+			    } else if (value.length > 2) {
+			        value = value.slice(0, 2); // Limit to 2 digits
+			    }
+
+			    // Update the input field with the validated value
+			    $(this).val(value);
+			});
+
+			</script>]]>
+		  </add>
+		</operation>
+	 </file>
+
+	 <file path="admin/controller/sale/order.php">		
+		<operation>
+		  <search><![CDATA[$data['products'] = array();]]></search>
+		  <add position="before">
+			<![CDATA[
+				/// timeslot start
+			/// timeslot start
+			  $data['config_modulstatus'] =$this->config->get('module_timeslot_status');
+			  $data['timeslotProducts']=array();
+			  $resultsTimeslots = $this->model_sale_order->getProducttimeslosst($this->request->get['order_id']);
+			  foreach($resultsTimeslots as $resultsTimeslot){
+				 $order_timeslots = $this->model_sale_order->getOrderTimeslot($resultsTimeslot['order_product_id']);
+
+				 $ordertimeslot=array();
+				 foreach($order_timeslots as $resultsTime){
+					$ordertimeslot[]=array(
+					  'ordertime_id'  => $resultsTime['ordertime_id'],
+					  'tmdday'        => $resultsTime['tmdday']
+   				    );
+			    }
+			
+				//// product info data get start
+				$timeslotProductResults = $this->model_sale_order->getProducttimeslot($resultsTimeslot['product_id']);
+				 if(!empty($timeslotProductResults)){
+					 $name        = $timeslotProductResults['name'];
+					 $product_id  = $timeslotProductResults['product_id'];
+					 
+				 }
+				//// product info data get end 
+				 $data['timeslotProducts'][]=array(
+				  'ordertimeslot'   => $ordertimeslot,
+				   'name'           => $name,
+				   'ordertime_id'   => $resultsTimeslot['ordertime_id'],
+				   'product_id'     => $product_id
+				 
+				 );
+			 }
+		/// timeslot end
+		    $tmd_timeslot_slot_no = $this->config->get('tmd_timeslot_slot_to');
+				$language_id = $this->config->get('config_language_id');
+				$slot_to = $tmd_timeslot_slot_no[$language_id]['to'];
+				
+			  $data['productInfos']= array();
+				$timesloprodcutInfos = $this->model_sale_order->getOrdertimeslotProductdata($this->request->get['order_id']);
+				foreach($timesloprodcutInfos as $timesloprodcutInfo){
+					$resultsProductTimeslots = $this->model_sale_order->getOrdertimeslotCustomer($timesloprodcutInfo['product_id'],$this->request->get['order_id']);
+
+					$timeslotdata=array();
+
+					foreach($resultsProductTimeslots as $timeslots){
+					   $timeslotdata[]=array(
+						  'tmdday' =>$timeslots['tmdday'].' '.$timeslots['tmdstart'].' '.$slot_to.' ' .$timeslots['endtmd']
+
+					   );
+				   }
+					$timeslotProductResults = $this->model_sale_order->getProducttimeslot($timesloprodcutInfo['product_id']);
+					 if(!empty($timeslotProductResults)){
+						 $name        = $timeslotProductResults['name'];
+						 $product_id  = $timeslotProductResults['product_id'];
+						 
+					 }
+					$data['productInfos'][]=array(
+						  'timeslotdata' => $timeslotdata,
+						  'name'         => $name
+					);
+				}    
+
+			]]>
+		  </add>
+		</operation>
+		<operation>
+		  <search><![CDATA[public function shipping() {]]></search>
+		  <add position="before">
+			<![CDATA[
+				//// time slot start
+		public function timeslotinfo() {
+				$this->load->model('sale/order');
+
+				if (isset($this->request->get['order_id'])) {
+				  $order_id = $this->request->get['order_id'];
+				} else {
+				  $order_id = 0;
+				}
+
+				if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+				$this->model_sale_order->addOrderTimeslot($order_id,$this->request->post);
+				$json['success'] = $this->language->get('text_success');
+				}
+
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode($json));
+				}
+		//// time slot start
+		
+	public function timeslotget() {
+			$json = array();
+			$this->load->model('sale/order');
+			if (isset($this->request->get['ordertime_id'])) {
+				$ordertime_id = $this->request->get['ordertime_id'];
+			} else {
+				$ordertime_id = 0;
+			}
+		  $timeslots = $this->model_sale_order->getTimeslotdata($ordertime_id);
+			$timeslots = $this->model_sale_order->getTimeslotdata($ordertime_id);
+
+			$starts = $timeslots['tmdstart'];
+				$ends = $timeslots['endtmd'];
+
+				$json['timeslotloop'] = array();
+
+				$start =$starts.':00';
+				$end =$ends.':00';
+				$tStart = strtotime($start);
+				$tEnd = strtotime($end);
+				$tNow = $tStart;
+				
+				if(!empty($tNow <= $tEnd)){
+					while($tNow <= $tEnd){
+				$json['timeslotloop'][]= date("H:i",$tNow)."\n";
+					$tNow = strtotime('+30 minutes',$tNow);
+				}
+				}else{
+					  while($tEnd <= $tNow){
+					  $json['timeslotloop'][]= date("H:i",$tEnd)."\n";
+					   $tEnd = strtotime('+30 minutes',$tEnd);
+					}
+				}
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($json));
+		}
+			]]>
+		  </add>
+		</operation>
+	</file>
+	 
+	 <file path="admin/view/template/sale/order_info.twig">
+		<operation>
+		  <search><![CDATA[</form>]]></search>
+		  <add position="before">
+			<![CDATA[
+			<fieldset>
+			<!----timeslot start ----->
+				{% if (config_modulstatus) %}
+			  <fieldset>
+				 <div class="form-group" id="timeslot">
+                  <label class="col-sm-2 control-label" for="input-timeslot_option_id">{{ entry_timeslot }}</label>
+                  <div class="col-sm-10">
+				  <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <td>{{ entry_producttime }}</td>
+                    <td>{{ entry_timeslot }}</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% set timesselected_row = 0 %}
+				    {% for timeslotProduct in timeslotProducts %}
+					<tr>
+					<td>
+					<label class="control-label" for="input-tmdday"> {{ timeslotProduct.name }}</label>
+					</td>
+					<td>
+					<table class="table table-bordered">
+					<tr>
+						<td>
+							<div class="row">
+							<label class="col-sm-3 control-label" for="input-tmdday">{{ entry_day}}</label>
+                <div class="col-md-9">
+						   	<input type="hidden" name="tmdtimeslot[{{timesselected_row}}][product_id]" value="{{ timeslotProduct.product_id }}"  />
+						   	<input type="hidden" name="tmdtimeslot[{{timesselected_row}}][order_status_id]" value="" class="order_status_idtime"  />
+							
+							<input type="hidden" name="tmdtimeslot[{{timesselected_row}}][ordertime_id]" value="{{ timeslotProduct.ordertime_id }}" id="input-ordertime_id" />
+							<select name="tmdtimeslot[{{timesselected_row}}][tmdday]" id="input-tmdday" class="form-control timeslotvalue" rel="{{timesselected_row}}">
+							 <option value="0">{{ text_select }}</option>
+					          {% for ordertime in timeslotProduct.ordertimeslot %}
+							    <option value="{{ ordertime.ordertime_id }}">{{ ordertime.tmdday }}</option>
+						     {% endfor %}
+							</select>
+							</div>
+							</div>
+						</td>
+						<td>
+							<div class="row">
+						<label class="col-sm-3 control-label" for="input-tmdstart">{{ entry_start }}</label>
+					      <div class="col-md-8">
+							<select name="tmdtimeslot[{{timesselected_row}}][tmdstart]" id="input-tmdstart" class="form-control">
+							</select>
+							</div>
+							</div>
+						</td>
+						<td>
+							<div class="row">
+						<label class="col-sm-3 control-label" for="input-tmdstart">{{ entry_to }}</label>
+					      <div class="col-md-8">
+							<select name="tmdtimeslot[{{timesselected_row}}][endtmd]" id="input-endtmd" class="form-control">
+							</select>
+							</div>
+							</div>
+						 </td>
+					</tr>
+					</table>
+				  </td>
+         </tr>
+				{% set timesselected_row = timesselected_row + 1 %}
+				{% endfor %}
+				</tbody>
+				</table>
+				</div>
+				</div>
+				</fieldset>
+        {% endif %}
+	<!----timeslot end ----->
+			]]>
+		  </add>
+		</operation>
+		<operation>
+		  <search><![CDATA[<div class="tab-pane" id="tab-additional">]]></search>
+		  <add position="before">
+			<![CDATA[
+		   {% if (config_modulstatus) %}
+			<div class="tab-pane" id="tab-timeslot">
+		   <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <td>{{ entry_producttime }}</td>
+                    <td>{{ entry_timeslot }}</td>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for timeslotproduct in productInfos %}
+                <tr>
+                  <td>{{ timeslotproduct.name }}</td>
+					<td>
+						<table class="table table-bordered">
+							{% set i=1 %}
+							{% for timeslot in timeslotproduct.timeslotdata %}
+							<tr {% if i==1 %}style="background:green;color:#FFF" {% endif %}>
+								<td>{{ timeslot.tmdday }}</td>
+							</tr>
+							{% set i =i+1 %}
+							{% endfor %}
+						</table>
+					</td>
+					  <tr>
+                {% endfor %}
+                  </tbody>
+              </table>
+            </div>		   
+            </div>
+   {% endif %}
+			
+			]]>
+		  </add>
+		</operation>
+		<operation>
+		  <search><![CDATA[ <li><a href="#tab-additional" data-toggle="tab">{{ tab_additional }}</a></li>]]></search>
+		  <add position="after">
+			<![CDATA[
+			{% if (config_modulstatus) %}
+			          <li><a href="#tab-timeslot" data-toggle="tab">{{ entry_timeslot }}</a></li>
+		  {% endif %}
+			]]>
+		  </add>
+		</operation>
+		<operation>
+		  <search><![CDATA[$('#button-history').on('click', function() {]]></search>
+		  <add position="before">
+			<![CDATA[
+			function addOrderTimeslot(){
+				$.ajax({
+					url:'index.php?route=sale/order/timeslotinfo&user_token={{ user_token }}&order_id={{ order_id }}',
+					type:'post',
+					dataType:'json',
+					data:$('#timeslot select,#timeslot hidden,#timeslot input'),
+					success: function(json) {
+					if (json['success']) {
+					}
+					},
+					error: function(xhr, ajaxOptions, thrownError) {
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+					}
+				});
+			};
+        $(document).on('change', '.timeslotvalue', function(){
+			var ordertime_id  = this.value; 
+			var rel = $(this).attr('rel'); 
+			var orde_statusid = $('select[name="order_status_id"]').val();
+			$.ajax({
+			url:'index.php?route=sale/order/timeslotget&user_token={{ user_token }}&ordertime_id='+ordertime_id,
+			dataType: 'json',
+				beforeSend: function() {
+					
+			},
+			complete: function() {
+				
+			},
+			success: function(json) {
+			html = '<option value="">{{ text_select }}</option>';
+			if (json['timeslotloop'] && json['timeslotloop'] != '') {
+			for (i = 0; i < json['timeslotloop'].length; i++) {
+				html += '<option value="' + json['timeslotloop'][i] + '"';
+				html += '>' + json['timeslotloop'][i] + '</option>';
+			}
+			}
+			$('select[name=\'tmdtimeslot['+rel+'][tmdstart]\']').html(html);
+			$('select[name=\'tmdtimeslot['+rel+'][endtmd]\']').html(html);
+			$('.order_status_idtime').val(orde_statusid);
+
+			}
+			});
+        });
+			
+			]]>
+		  </add>
+		</operation>
+		<operation>
+		  <search><![CDATA[$('#button-history').on('click', function() {]]></search>
+		  <add position="after">
+			<![CDATA[
+			addOrderTimeslot();
+			
+			]]>
+		  </add>
+		</operation>
+		<operation>
+		  <search><![CDATA[var order_status_id = $('select[name="order_status_id"]').val();]]></search>
+		  <add position="after">
+			<![CDATA[
+			  $('.order_status_idtime').val(order_status_id);
+			]]>
+		  </add>
+		</operation>
+	</file>
+	
+	 <file path="admin/model/sale/order.php">
+		<operation>
+		  <search><![CDATA[public function getTotalEmailsByProductsOrdered($products) {]]></search>
+		  <add position="before">
+			<![CDATA[
+					/* <!----timeslot start -----> */
+	public function getTimeslotdata($ordertime_id) {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "timeslot_ordertimeslot WHERE ordertime_id='".(int)$ordertime_id ."'");
+			return $query->row;
+		}
+				
+	public function getOrderTimeslot($order_product_id) {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "timeslot_ordertimeslot WHERE Order_product_id='".(int)$order_product_id ."'");
+			return $query->rows;
+		}
+
+public function addOrderTimeslot($order_id,$data) {
+	if(!empty($data['tmdtimeslot'])){
+			foreach($data['tmdtimeslot'] as $key => $value){
+				$query_timeslot=$this->db->query("SELECT * FROM " . DB_PREFIX . "timeslot_ordertimeslotcustomer WHERE  order_id = '" . (int)$order_id . "' and ordertime_id = '" . (int)$value['tmdday']. "'");
+				
+				$query_day_name=$this->db->query("SELECT * FROM " . DB_PREFIX . "timeslot_ordertimeslot WHERE  ordertime_id = '" . (int)$value['tmdday']. "'");
+			
+         if (!empty($query_day_name->num_rows)) {
+					$tmddayname = $query_day_name->row['tmdday'];
+				 }
+
+				if ($query_timeslot->num_rows) {
+					if(!empty($value['tmdday'])){
+					 $this->db->query("INSERT INTO " . DB_PREFIX . "timeslot_ordertimeslotcustomer SET order_id = '" . (int)$order_id . "',product_id = '" . (int)$value['product_id'] . "',order_status_id = '" . (int)$value['order_status_id'] . "',ordertime_id = '" . (int)$value['tmdday'] . "',tmdday = '" . $this->db->escape($tmddayname) . "',endtmd = '" . $this->db->escape($value['endtmd']) . "',tmdstart = '" . $this->db->escape($value['tmdstart']) . "',date_added = NOW()");
+					 }
+			     }else{
+					 if(!empty($value['tmdday'])){
+					 $this->db->query("INSERT INTO " . DB_PREFIX . "timeslot_ordertimeslotcustomer SET order_id = '" . (int)$order_id . "',product_id = '" . (int)$value['product_id'] . "',order_status_id = '" . (int)$value['order_status_id'] . "',ordertime_id = '" . (int)$value['tmdday'] . "',tmdday = '" . $this->db->escape($tmddayname) . "',endtmd = '" . $this->db->escape($value['endtmd']) . "',tmdstart = '" . $this->db->escape($value['tmdstart']) . "',date_added = NOW()");
+				}
+			  }
+			  }
+			 }
+			
+		}
+		
+ public function getOrdertimeslotCustomer($product_id,$order_id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "timeslot_ordertimeslotcustomer  WHERE product_id = '" . (int)$product_id . "' and order_id=".$order_id." ORDER BY date_added DESC ");
+		return $query->rows;
+	  }
+		
+public function getOrdertimeslotProductdata($order_id) {
+			$query = $this->db->query("SELECT  product_id  FROM " . DB_PREFIX . "timeslot_ordertimeslotcustomer WHERE  order_id = '" . (int)$order_id . "' group by product_id");
+			return $query->rows;
+		 }
+		
+public function getProducttimeslosst($order_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "order_product p LEFT JOIN " . DB_PREFIX . "timeslot_ordertimeslot pd ON (p.order_product_id = pd.order_product_id) WHERE p.order_id = '" . (int)$order_id . "' group by p.order_product_id ");
+		return $query->rows;
+	}
+		
+public function getOrdertimeslotProduct($order_id) {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE  order_id = '" . (int)$order_id . "'");
+			return $query->rows;
+		}
+		
+public function getProducttimeslot($product_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+		return $query->row;
+	}
+	/* <!----timeslot start -----> */		
+			]]>
+		  </add>
+		</operation>
+	</file>
+
+	<file path="admin/language/*/catalog/product.php">
+		<operation>
+		  <search><![CDATA[$_['heading_title']          = 'Products';]]></search>
+		  <add position="after">
+			<![CDATA[
+				/* time slot start */
+				$_['entry_timeslot']          = 'Time Slot';
+				$_['entry_day']               = 'Day';
+				$_['entry_to']                = 'To';
+				$_['entry_start']             = 'From';
+				$_['entry_end']               = 'To';
+				$_['text_acion']              = 'Action';
+				/* time slot start */
+			]]>
+		   </add>
+		</operation>
+	</file>
+	
+	<file path="admin/language/*/sale/order.php">
+		<operation>
+		  <search><![CDATA[$_['column_order_id']            = 'Order ID';]]></search>
+		  <add position="after">
+			<![CDATA[
+				/* time slot start */
+				$_['entry_timeslot']          = 'Times Selected	';
+				$_['entry_producttime']       = 'Products';
+				$_['entry_day']               = 'Day';
+				$_['entry_to']                = 'To';
+				$_['entry_start']             = 'From';
+				$_['entry_end']               = 'To';
+				$_['text_acion']              = 'Action';
+				/* time slot start */
+			]]>
+		   </add>
+		</operation>
+	</file>
+
+	<file path="admin/model/catalog/product.php">
+		<operation>
+		  <search><![CDATA[$product_id = $this->db->getLastId();]]></search>
+		  <add position="after">
+			<![CDATA[
+			/* time slot start */
+			if (isset($data['time_status'])) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "timeslot SET product_id = '" . (int)$product_id . "',time_status = '" .(int)$data['time_status'] . "'");
+			}
+
+			if (isset($data['timeslot'])) {
+			foreach ($data['timeslot'] as $timess) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "timeslot_timesday SET product_id = '" . (int)$product_id . "',time_start = '" . $this->db->escape($timess['time_start']) . "',time_end = '" . $this->db->escape($timess['time_end']) . "',sort_order = '" . (int)$timess['sort_order'] . "'");
+				$time_id = $this->db->getLastId();
+				 foreach ($timess['days'] as $language_id => $timeslot_value) {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "timeslot_timesvalue SET time_id = '" . (int)$time_id . "', language_id = '" . (int)$language_id . "', product_id = '" . (int)$product_id . "', timeslot_time = '" . $this->db->escape($timeslot_value['timeslot_time']) . "'");
+				}
+			}
+			}
+			/* time slot end  */
+						
+			]]>
+		  </add>
+		</operation>
+	<operation>
+		  <search><![CDATA[$this->db->query("DELETE FROM " . DB_PREFIX . "product_option WHERE product_id = '" . (int)$product_id . "'");]]></search>
+		  <add position="before">
+			<![CDATA[
+		/* time slot start */
+			$timeslot_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "timeslot WHERE product_id = '" . $product_id . "'");
+			if(!empty($timeslot_query->row)){
+				$this->db->query("UPDATE " . DB_PREFIX . "timeslot SET  product_id = '" . (int)$product_id . "',time_status = '" .(int)$data['time_status'] . "' WHERE product_id = '" . (int)$product_id . "'");
+			}else{
+				$this->db->query("INSERT INTO " . DB_PREFIX . "timeslot SET product_id = '" . (int)$product_id . "',time_status = '" .(int)$data['time_status'] . "'");
+			}
+		
+	  $this->db->query("DELETE FROM " . DB_PREFIX . "timeslot_timesday WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "timeslot_timesvalue WHERE product_id = '" . (int)$product_id . "'");
+
+		if (isset($data['timeslot'])) {
+		foreach ($data['timeslot'] as $timess) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "timeslot_timesday SET product_id = '" . (int)$product_id . "',time_start = '" . $this->db->escape($timess['time_start']) . "',time_end = '" . $this->db->escape($timess['time_end']) . "',sort_order = '" . (int)$timess['sort_order'] . "'");
+			$time_id = $this->db->getLastId();
+			 foreach ($timess['days'] as $language_id => $timeslot_value) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "timeslot_timesvalue SET time_id = '" . (int)$time_id . "', language_id = '" . (int)$language_id . "', product_id = '" . (int)$product_id . "',timeslot_time = '" . $this->db->escape($timeslot_value['timeslot_time']) . "'");
+			}
+		}
+		}
+			/* time slot end  */
+						
+			]]>
+		  </add>
+		</operation>
+	  <operation>
+		  <search><![CDATA[public function getTotalProductsByProfileId($recurring_id) {]]></search>
+		  <add position="before">
+			<![CDATA[
+		/* time slot start */
+	public function getTimeslotValue($product_id) {
+		$timeslot_value_data = array();
+		$timeslot_value_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "timeslot_timesday WHERE product_id = '" . (int)$product_id . "'");
+    	foreach ($timeslot_value_query->rows as $timeslot_value) {
+			$timeslot_value_timedata = array();
+			$timeslot_value_query_times = $this->db->query("SELECT * FROM " . DB_PREFIX . "timeslot_timesvalue WHERE time_id = '" . (int)$timeslot_value['time_id'] . "'");
+			foreach ($timeslot_value_query_times->rows as $timeslot_value_query_time) {
+			  $timeslot_value_timedata[$timeslot_value_query_time['language_id']] = array('timeslot_time' => $timeslot_value_query_time['timeslot_time']);
+			}
+			$timeslot_value_data[] = array(
+				'time_id'                  => $timeslot_value['time_id'],
+				'sort_order'               => $timeslot_value['sort_order'],
+				'timeslot_value_timedata'  => $timeslot_value_timedata,
+				'time_end'                 => $timeslot_value['time_end'],
+				'time_start'               => $timeslot_value['time_start']
+			);
+          
+		}
+		return $timeslot_value_data;
+	    }		
+			]]>
+		  </add>
+		</operation>
+	  <operation>
+		  <search><![CDATA[public function getTotalProductsByLayoutId($layout_id) {]]></search>
+		  <add position="before">
+			<![CDATA[
+					public function getProducttimeslotstart($product_id) {
+					$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "timeslot WHERE product_id = '" . (int)$product_id . "'");
+					return $query->row;
+					}
+					/* time slot start */
+			]]>
+		  </add>
+		</operation>
+	</file>
+
+	 <file path="admin/view/template/sale/order_history.twig">
+		<operation>
+		  <search><![CDATA[<td class="text-left">{{ column_comment }}</td>]]></search>
+		  <add position="after">
+			<![CDATA[
+			{% if (config_modulstatus) %} 
+			<td class="text-left">{{ entry_timeslot }}</td>
+				{% endif %}
+			]]>
+		  </add>
+		</operation>
+		<operation>
+		  <search><![CDATA[<td class="text-left">{{ history.comment }}</td>]]></search>
+		  <add position="after">
+			<![CDATA[
+			<!----/// time time slot start ---->
+				{% if (config_modulstatus) %} 
+				<td class="text-left">
+				{% for timeslotstart in history.timeslotstarts %}
+				</br>
+				{{ timeslotstart.tmdday }}
+				{% endfor %}
+				</td>
+			{% endif %}
+			<!----/// time time slot end ---->
+			]]>
+		  </add>
+		</operation>
+	</file>
+	 
+	  <file path="admin/controller/common/column_left.php">
+		<operation>
+		  <search><![CDATA[$design = array();]]></search>
+		  <add position="after">
+			<![CDATA[
+			   $moduletimeslot_status = $this->config->get('module_timeslot_status');
+			   if($moduletimeslot_status){
+					/// timeslot start 
+					$timeslot = array();
+					if ($this->user->hasPermission('access', 'extension/timeslot')) {
+					$timeslot[] = array(
+						'name'	   => $this->language->get('text_timeslot'),
+						'href'     => $this->url->link('extension/timeslot', 'user_token=' . $this->session->data['user_token'], true),
+						'children' => array()		
+					);
+					}
+					$data['menus'][] = array(
+						'id'       => 'menu-timeslot',
+						'icon'	   => 'fa fa-clock-o', 
+						'name'	   => $this->language->get('text_timeslot'),
+						'href'     => '',
+						'children' => $timeslot
+					);
+				
+					
+				/// timeslot end 
+			  }
+			
+			]]>
+		  </add>
+		</operation>
+	</file>
+
+	 <file path="admin/language/en-gb/common/column_left.php">
+		<operation>
+		  <search><![CDATA[// Text]]></search>
+		  <add position="after">
+			<![CDATA[
+				
+				$_['text_timeslot']  = 'TMD Availability Time Slots';
+				
+			]]>
+		  </add>
+		</operation>
+	</file>
+
+	 <file path="catalog/controller/mail/order.php">
+
+ 		<operation>
+		  <search ><![CDATA['value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)]]></search>
+		  <add position="replace">
+		 	<![CDATA['value' => (utf8_strlen($value) > 500 ? utf8_substr($value, 0, 500) . '..' : $value)]]>
+		  </add>
+		</operation>
+
+		<operation>
+		  <search><![CDATA[$data['comment'] = strip_tags($comment);]]></search>
+		  <add position="after">
+			<![CDATA[
+			// xml
+			 $this->load->language('extension/timeslot');
+				$tmd_timeslot_slot_no=$this->config->get('tmd_timeslot_slot_no');
+				$language_id=$this->config->get('config_language_id');
+				if(!empty($tmd_timeslot_slot_no[$language_id]['on'])){
+				$data['slot_no']= $tmd_timeslot_slot_no[$language_id]['on'];
+				}else{
+				$data['slot_no'] =$this->language->get('text_sloton');
+				}
+              
+			
+			  $tmd_timeslot_slot_no=$this->config->get('tmd_timeslot_slot_from');
+				$language_id=$this->config->get('config_language_id');
+				if(!empty($tmd_timeslot_slot_no[$language_id]['from'])){
+				$data['slot_from']= $tmd_timeslot_slot_no[$language_id]['from'];
+				}else{
+				$data['slot_from'] =$this->language->get('text_slotfrom');
+				}
+
+			  $tmd_timeslot_slot_no=$this->config->get('tmd_timeslot_slot_to');
+				$language_id=$this->config->get('config_language_id');
+				if(!empty($tmd_timeslot_slot_no[$language_id]['to'])){
+				$data['slot_to']= $tmd_timeslot_slot_no[$language_id]['to'];
+				}else{
+				$data['slot_to'] =$this->language->get('text_slotto');
+				}
+			
+			$data['timeslots']=array();
+		
+			$ordertimeslot_status_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "timeslot_ordertimeslotcustomer WHERE order_status_id = '" . (int)$order_status_id . "' and order_id ='".$order_info['order_id']."' order by orderctime_id  DESC limit 0,1");
+			
+			if(!empty($ordertimeslot_status_query->rows)){
+			foreach($ordertimeslot_status_query->rows as $statusquery ){
+				$ordertimeslot_prody_query =$this->db->query("SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$statusquery['product_id'] . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+				if (!empty($ordertimeslot_prody_query->row['name'])) {
+					$pname = html_entity_decode($ordertimeslot_prody_query->row['name']);
+				} else {
+					$pname = '';
+				}
+				$data['timeslots'][]=[
+				 'tmdday'    =>$statusquery['tmdday'],	
+				 'tmdstart'  =>$statusquery['tmdstart'],	
+				 'endtmd'    =>$statusquery['endtmd'],	
+				 'pname'     =>$pname,
+				];
+			  }
+			}
+			// xml
+			]]>
+		  </add>
+		</operation>
+	</file>
+	
+	 <file path="catalog/view/theme/*/template/mail/order_edit.twig">
+		<operation>
+		  <search><![CDATA[{{ order_status }}]]></search>
+		  <add position="after">
+			<![CDATA[{% for timeslot in timeslots %}
+{{timeslot.pname}}
+{{slot_no}}: {{timeslot.tmdday}}
+{{slot_from}}: {{timeslot.tmdstart}}
+{{slot_to}}:  {{timeslot.endtmd}}
+{% endfor %}]]>
+		  </add>
+		</operation>
+	</file>
+</modification>
